@@ -9,7 +9,7 @@ class HierSoftmax(nn.Module):
         self.__tree.to(device)
     def check_error(**kwargs):
         if("seq_list" in kwargs):
-            if(len(kwargs["word_list"]) == 0):
+            if(len(kwargs["seq_list"]) == 0):
                 raise ValueError("Empty list of sequences")
 
             if("word_list" in kwargs):

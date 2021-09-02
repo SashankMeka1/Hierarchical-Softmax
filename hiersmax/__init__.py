@@ -1,1 +1,1 @@
-from hier_softmax import HierSoftmax
+import hiersmax.hier_softmax
