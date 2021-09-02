@@ -1,0 +1,10 @@
+README.md
+setup.py
+hiersmax/hiersmax.egg-info/PKG-INFO
+hiersmax/hiersmax.egg-info/SOURCES.txt
+hiersmax/hiersmax.egg-info/dependency_links.txt
+hiersmax/hiersmax.egg-info/not-zip-safe
+hiersmax/hiersmax.egg-info/requires.txt
+hiersmax/hiersmax.egg-info/top_level.txt
+hiersmax/huffman/__init__.py
+hiersmax/huffman/huffman.py
