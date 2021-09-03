@@ -11,7 +11,7 @@ setup(
     version= "1.0.0",
     author="sashank meka",
     author_email="sashankmeka7@gmail.com",
-    packages=['hier_softmax'],
+    packages=['torch_hier_softmax'],
     include_package_data=True,
     python_requires=">=3.7.*",
     install_requires=['torch'],

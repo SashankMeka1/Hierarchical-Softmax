@@ -1,7 +1,7 @@
 README.md
 setup.py
-hier_softmax/__init__.py
-hier_softmax/hier_softmax.py
+torch_hier_softmax/__init__.py
+torch_hier_softmax/main.py
 torch_hier_softmax.egg-info/PKG-INFO
 torch_hier_softmax.egg-info/SOURCES.txt
 torch_hier_softmax.egg-info/dependency_links.txt

@@ -11,7 +11,7 @@ Pytorch does not have an in-built extension for hierarchical softmax, so I built
 This implementation in particular uses a Huffman tree as the tree type to determine the probabilities of words.
 
 To install, do ```pip install <REPO LINK>```.<br/><br/>
-Once installed, import the package with ```import hiersmax as HierSoftmax```.<br/><br/>
+Once installed, import the package with ```from torch_hier_softmax.main import HierSoftmax```.<br/><br/>
 
 
 Initialize the tree with ```HierSoftmax(vocab, vector_size, device)```. <br/>

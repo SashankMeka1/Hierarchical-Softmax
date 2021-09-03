@@ -1,1 +1,1 @@
-hier_softmax
+torch_hier_softmax
