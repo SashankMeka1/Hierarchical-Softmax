@@ -1,0 +1,10 @@
+README.md
+setup.py
+hier_softmax/huffman/__init__.py
+hier_softmax/huffman/huffman.py
+hier_softmax/torch_hier_softmax.egg-info/PKG-INFO
+hier_softmax/torch_hier_softmax.egg-info/SOURCES.txt
+hier_softmax/torch_hier_softmax.egg-info/dependency_links.txt
+hier_softmax/torch_hier_softmax.egg-info/not-zip-safe
+hier_softmax/torch_hier_softmax.egg-info/requires.txt
+hier_softmax/torch_hier_softmax.egg-info/top_level.txt
