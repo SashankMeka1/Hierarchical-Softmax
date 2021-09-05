@@ -1,7 +1,10 @@
 # **Pytorch Hierarchical Softmax Extension**<br/>
-Hierarchical softmax is an efficient alternative to the popular softmax activation function that can be computed in O(log(N)) time instead of the usual O(N) time. For this reason, it is quite popular in NLP tasks to save time.<br/>
+Hierarchical softmax is an efficient alternative to the popular softmax activation function that can be computed in O(log(N)) time instead of the usual O(N) time by breaking the probability computation into a traversable binary tree as illustrated below. For this reason, it is quite popular in NLP tasks to save time.<br/>
 
-![image](https://user-images.githubusercontent.com/63683831/132118563-31ea07ac-34ac-4e74-b0ad-955dde4e118f.png)<br/>
+![image](https://user-images.githubusercontent.com/63683831/132118973-2b10e5f1-7543-4439-b0f0-407d6ac67118.png)<br/><br/>
+
+Source: BuildingBabylon <br/><br/>
+
 
 Pytorch does not have an in-built extension for hierarchical softmax, so I built a python package for that. It can be treated as a Pytorch module in that it is easy to integrate into Pytorch's models.<br/>
 
