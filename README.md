@@ -20,7 +20,7 @@ The device is the cuda device on which the parameters will be allocated.<br/><br
 To get the probabilities of words pass the sequences to the ```get_prob(seq_list)``` method, which will find the word probabilities. To train the tree, ```train(seq_list, word_list)``` can be used. <br/>
 The ```seq_list``` and ```word_list``` parameter is described in the ```hier_softmax.py``` file. <br/>
 
-Everything else functions the same as a regular Pytorch module.<br/><br/><br/><br/?
+Everything else functions the same as a regular Pytorch module.<br/><br/><br/><br/>
 
 
 
