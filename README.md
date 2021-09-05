@@ -3,7 +3,7 @@ Hierarchical softmax is an efficient alternative to the popular softmax activati
 
 ![image](https://user-images.githubusercontent.com/63683831/132118973-2b10e5f1-7543-4439-b0f0-407d6ac67118.png)<br/><br/>
 
-###### **Source: BuildingBabylon <br/><br/>
+##### **Source: BuildingBabylon** <br/><br/>
 
 
 Pytorch does not have an in-built extension for hierarchical softmax, so I built a python package for that. It can be treated as a Pytorch module in that it is easy to integrate into Pytorch's models.<br/>
