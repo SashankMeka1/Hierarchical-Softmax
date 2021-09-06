@@ -14,7 +14,7 @@ To install, do ```pip install <REPO LINK>```.<br/><br/>
 Once installed, import the package with ```import hier_softmax```.<br/><br/>
 
 
-Initialize the tree with ```hier_softmax(vocab, vector_size, device)```. <br/>
+Initialize the tree with ```HierSoftmax(vocab, vector_size, device)```. <br/>
 The vocab is a dictionary of all the words in the vocabulary and their frequencies. <br/>
 The vector size is the size of the representation vectors that will be on the tree(explained in paper describing implementation linked below). <br/>
 The device is the cuda device on which the parameters will be allocated.<br/><br/>
