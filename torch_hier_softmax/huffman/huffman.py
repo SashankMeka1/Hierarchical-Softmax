@@ -107,6 +107,8 @@ class HuffmanTree(nn.Module):
     def to(self, device):
         for param, i in enumerate(self.PARAMS):
             self.PARAMS[i] = param.to(device)
+    #print tree method
+    #source: geeks4geeks copied for debugging   
     def print_util(self, root, space):
         if (root == None) :
             return
