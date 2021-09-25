@@ -2,106 +2,126 @@ import torch
 import torch.nn as nn
 
 class Node:
-    def __init__(self,freq,rep_vector,left,right):
-        self.freq = freq
-        self.rep_vector = rep_vector
+    def __init__(self,freq,word,rep_vector,left,right):
+        self.FREQ = freq
+        self.REP_VECTOR = rep_vector
         self.left = left
         self.right = right
-        self.word = None
-    def set_word(word):
-        self.word = word
+        self.WORD = word
 
 class HuffmanTree(nn.Module):
     def __init__(self,vocab_dict,rep_vector_size, device):
-        super().__init__()
-        self.root = None
-        self.paths = {}
-        self.params = []
-        self.device = device
-        self.rep_vector_size = rep_vector_size
-        self.vocab_dict = vocab_dict
-        self.vocab = []
+        super(HuffmanTree, self).__init__()
+        self.ROOT = None
+        self.PATHS = {}
+        self.PARAMS = []
+        self.DEVICE = device
+        self.REP_VECTOR_SIZE = rep_vector_size
+        self.VOCAB_DICT = vocab_dict
+        self.VOCAB = []
         for word,freq in list(vocab_dict.items()):#build heap of nodes
-            self.vocab.append(Node(freq,None,None,None).set_word(word))
-        self.build_heap()
-        self.assign_codes(self.root,[])#assign codes
-        self.params = nn.ParameterList(self.params)
+            self.VOCAB.append(Node(freq,word,None,None,None))
+        self.build_huffman_tree()
+        self.assign_codes(self.ROOT,[])#assign codes
+        self.PARAMS = nn.ParameterList(self.PARAMS)
     def heapify(self,idx):
         minimum = idx
         left = (2*idx)+1
         right = (2*idx)+2
 
         #recursive heapify smaller frequency nodes first with higher freq as children
-        if(left < len(self.vocab) and self.vocab[left].freq < self.vocab[minimum].freq):
+        if(left < len(self.VOCAB) and self.VOCAB[left].FREQ < self.VOCAB[minimum].FREQ):
             minimum = left
-        if(right < len(self.vocab) and self.vocab[right].freq < self.vocab[minimum].freq):
+        if(right < len(self.VOCAB) and self.VOCAB[right].FREQ < self.VOCAB[minimum].FREQ):
             minimum = right
         if minimum != idx:
-            swap(self.vocab[minimum],self.vocab[idx])
-            heapify(minimum)
+            self.VOCAB[minimum], self.VOCAB[idx] = self.VOCAB[idx], self.VOCAB[minimum]
+            self.heapify(minimum)
     def build_heap(self):
-        for idx in range(len(self.vocab)//2):
-            heapify(idx)
+        for idx in range(len(self.VOCAB)//2):
+            self.heapify(idx)
     def build_huffman_tree(self):
+        self.build_heap()
         start_idx = 0
         left = 1
         right = 2
-        while(len(self.vocab) - start_idx != 1):
-            rep_vector = torch.randn(self.rep_vector_size, requires_grad=True, device = self.device)
-            self.params.append(nn.Parameter(rep_vector))
-            root = self.vocab[start_idx]
-            left_node = self.vocab[left]
-            if(right < len(self.vocab)):
-                right_node = self.vocab[right]
+        while(len(self.VOCAB) - start_idx != 1):
+            rep_vector = torch.randn(self.REP_VECTOR_SIZE, requires_grad=True, device = self.DEVICE)
+            self.PARAMS.append(nn.Parameter(rep_vector))
+            root = self.VOCAB[start_idx]
+            minimum = None
+            min_idx = None
+            #nodes with low frequency get combined into larger frequency nodes and reheapify
+            if(right < len(self.VOCAB) and self.VOCAB[left].FREQ > self.VOCAB[right].FREQ):
+                minimum = self.VOCAB[right]
+                min_idx = right
             else:
                 right_node = None
-            #nodes with low frequency get combined into larger frequency nodes and reheapify
-            if(right_node == None and left_node.freq < right_node.freq):
-                self.vocab[left] = node(root.freq+left_node.freq,rep_vector,root,left_node)
-            elif(left_node.freq > right_node.freq):
-                self.vocab[right] = node(root.freq+right_node.freq,rep_vector,root,right_node)
+                minimum = self.VOCAB[left]
+                min_idx = left
+            #freq, word, rep_vector, left, right
+            new_freq = root.FREQ+minimum.FREQ
+            self.VOCAB[min_idx] = Node(new_freq,"Internal Node",rep_vector,root, minimum)
             start_idx += 1
-            left += start_idx
-            right += start_idx
-            heapify(start_idx)
+            left += 1
+            right += 1
+            self.heapify(start_idx)
+        self.ROOT = self.VOCAB[-1]
         
     def assign_codes(self,root,path):
         #postorder path code assignment
-        if(root.left):
-            assign_codes(root.left,path+[0])
-        if(root.right):
-            assign_codes(root.right,path+[1])
-        if(root.word != None):
-            self.paths.update({word:path})
+        if(root and root.left):
+            self.assign_codes(root.left,path+[0])
+        if(root and root.right):
+            self.assign_codes(root.right,path+[1])
+        if(root.WORD != None):
+            self.PATHS.update({root.WORD:path})
     def get_prob(self,word_vec):
         #traverse grab the word
-        root = self.root
+        root = self.ROOT
         prob = 1
-        while(root.rep_vector != None):
-            prob *= torch.sigmoid(torch.matmul(root.rep_vector,word_vec))
+        while(root.REP_VECTOR != None):
+            prob *= torch.sigmoid(torch.matmul(root.REP_VECTOR,word_vec))
             if(prob >= 0.5):
                 root = root.right
             else:
                 root = root.left
-        return root.word
+        return root.WORD
     def train(self,word_vec,word):
         #traverse grab the probability
         prob = 1
-        root = self.root
-        if word not in self.vocab_dict:
+        root = self.ROOT
+        if word not in self.VOCAB_DICT:
             raise MissingValueError("Word not in vocab")
-        path = self.paths[word]
+        path = self.PATHS[word]
         for digit in path:
-            right_prob = torch.sigmoid(torch.matmul(root.rep_vector,word_vec))
+            right_prob = torch.sigmoid(torch.matmul(root.REP_VECTOR,word_vec))
             if digit == 1:
                 prob *= right_prob
+                root = root.right
             else:
                 prob *= (1-right_prob)
+                root = root.left
+                
         return prob
     def to(self, device):
-        for param, i in enumerate(self.params):
-            self.params[i] = param.to(device)
+        for param, i in enumerate(self.PARAMS):
+            self.PARAMS[i] = param.to(device)
+    def print_util(self, root, space):
+        if (root == None) :
+            return
+    
+        space += 10
+    
+        self.print_util(root.right, space)
+    
 
-        
-
-        
+        print()
+        for i in range(10, space):
+            print(end = " ")
+        print(root.WORD)
+    
+        self.print_util(root.left, space)
+    def print_tree(self):
+        self.print_util(self.ROOT,0)
+    
