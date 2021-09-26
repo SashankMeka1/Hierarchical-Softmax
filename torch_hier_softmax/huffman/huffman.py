@@ -81,7 +81,7 @@ class HuffmanTree(nn.Module):
         root = self.ROOT
         prob = 1
         while(root.REP_VECTOR != None):
-            prob *= torch.sigmoid(torch.matmul(root.REP_VECTOR,word_vec))
+            prob = torch.sigmoid(torch.matmul(root.REP_VECTOR,word_vec))
             if(prob >= 0.5):
                 root = root.right
             else:
@@ -89,10 +89,10 @@ class HuffmanTree(nn.Module):
         return root.WORD
     def train(self,word_vec,word):
         #traverse grab the probability
-        prob = 1
-        root = self.ROOT
         if word not in self.VOCAB_DICT:
             raise MissingValueError("Word not in vocab")
+        prob = 1
+        root = self.ROOT
         path = self.PATHS[word]
         for digit in path:
             right_prob = torch.sigmoid(torch.matmul(root.REP_VECTOR,word_vec))
@@ -102,7 +102,6 @@ class HuffmanTree(nn.Module):
             else:
                 prob *= (1-right_prob)
                 root = root.left
-                
         return prob
     def to(self, device):
         for param, i in enumerate(self.PARAMS):

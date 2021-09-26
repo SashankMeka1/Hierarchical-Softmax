@@ -8,7 +8,7 @@ class HierSoftmax(nn.Module):
         self.tree = HuffmanTree(vocab,vector_size, device)
     def to(self, device):
         self.tree.to(device)
-    def check_error(**kwargs):
+    def check_error(*args, **kwargs):
         if("seq_list" in kwargs):
             if(len(kwargs["seq_list"]) == 0):
                 raise ValueError("Empty list of sequences")
@@ -24,21 +24,28 @@ class HierSoftmax(nn.Module):
     #each sequence should contain list of vectors representing words
     #will return list of sequences with word for each vector
     def get_prob(self,seq_list):
-        check_error(seq_list = seq_list)
-        for batch,batch_idx in enumerate(seq_list):
-            for word_vec,word_idx in enumerate(batch):
-                word_matrix[batch_idx][word_idx] = self.tree.get_prob(word_vec)
-        return seq_list
+        self.check_error(seq_list = seq_list)
+        out_list = []
+        for batch in seq_list:
+            out_list.append([])
+            for word_vec in batch:
+                out_list[-1].append(self.tree.get_prob(word_vec))
+        return out_list
     
     #pass list of sequences with same requirements as get_prob
     #receive loss for entire batch
     def train(self,seq_list,word_list):
-        check_error(seq_list = seq_list, word_list = word_list)
-        batch_error = []
-        for batch,batch_idx in enumerate(seq_list):
-            seq_error = []
-            for word_vec,word in zip(batch, word_list[batch]):
-                sample_ce_loss = -torch.log(self.tree.train(word_vec,word_list[word_idx]))
-                seq_error.append(sample_ce_loss)
-            batch_error.append(torch.mean(torch.FloatTensor(seq_error)))
-        return torch.mean(torch.FloatTensor(batch_error))
+        self.check_error(seq_list = seq_list, word_list = word_list)
+        batch_error = 0
+        batch_num = 0
+        for seq_idx,seq in enumerate(seq_list):
+            words = word_list[seq_idx]
+            seq_error = 0
+            seq_num = 0
+            for word_idx,word_vec in enumerate(seq):
+                sample_ce_loss = -torch.log(self.tree.train(word_vec,words[word_idx]))
+                seq_error += sample_ce_loss
+                seq_num += 1
+            batch_error += seq_error
+            batch_num += 1
+        return batch_error/batch_num
